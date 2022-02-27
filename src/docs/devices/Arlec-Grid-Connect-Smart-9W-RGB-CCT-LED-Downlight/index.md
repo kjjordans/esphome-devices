@@ -6,6 +6,10 @@ standard: au
 ---
 
 Sold at Bunnings in Australia. Model number ALD092RHA.
+A new version (series 2) of this downlight is being sold which uses the WB3L WIFI module which can not be flashed with ESPHome without swapping the WIFI module.
+
+# Series 1 Driver
+The series 1 driver can be identified by the model number on the driver TW-092RHA whitout 'series 2' written after the model number. There is no indication on the outside of the package which driver is being used. 
 
 Flashing requires opening the inline driver (hence, exposure to line voltage), and soldering wires to the TYWE5P board inside.
 Flashing via tuya-convert did not work for me. Assumed to be affected by [New PSK format - Issue #483](https://github.com/ct-Open-Source/tuya-convert/issues/483).
@@ -88,3 +92,26 @@ light:
     cold_white_color_temperature: 5700 K
     warm_white_color_temperature: 3000 K
 ```
+
+
+# Series 2 Driver
+
+The series 2 driver can be intentified by the model number "TW-092RHA Series 2"
+
+In order to install ESPHome on the driver modlule, the WIFI module must be replaced with an ESP8266. Once replaced, the pinout is shown below.
+
+## ESP8266 GPIO Pinout
+
+| Pin    | Function              |
+| ------  | --------------------- |
+| GPIO13  | Cold white brightness |
+| GPIO12  | Warm white brightness |
+| GPIO4   | Red                   |
+| GPIO15* | Blue                  |
+| GPIO5   | Green                 |
+
+The blue chanel is connected to GPIO15 which needs to be pulled down during boot for the ESP8266 to start. If the pin is pulled directly to ground, the blue chanel will be unavailable. A SMD (0805) reisitor with a value of between 2k and 10k will pull down the the pin during boot but allow the blue chanel to work correctly (I have not tested using a resistor). 
+A jumper wire must be soldered between the enable pin and VCC on the ESP8266 as shown in the picture below. 
+
+
+![daughter board1](https://user-images.githubusercontent.com/3042340/155872648-f574e7a4-cdc3-4cc2-9d09-e37d51c49642.png)
